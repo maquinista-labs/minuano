@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: minuano-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       minuanodb
+      POSTGRES_USER:     minuano
+      POSTGRES_PASSWORD: minuano
+    ports:
+      - "5432:5432"
+    volumes:
+      - minuano-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U minuano -d minuanodb"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: minuano-pgadmin
+    restart: unless-stopped
+    profiles: ["debug"]
+    environment:
+      PGADMIN_DEFAULT_EMAIL:    admin@minuano.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  minuano-pgdata:
