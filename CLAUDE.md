@@ -83,6 +83,12 @@ Track which task you're on. When you complete a task, note it here:
 - [x] 24 — Agent Scripts
 - [x] 25 — Agent CLAUDE.md
 - [x] 26 — TUI Watch View
+- [x] I-01 — `--json` flag on status and show
+- [x] I-02 — `ClaimByID` query
+- [x] I-03 — Project filter on `AtomicClaim`
+- [x] I-04 — `minuano-pick` script
+- [x] I-05 — `--project` flag on `minuano-claim`
+- [x] I-06 — `minuano prompt` command
 
 ## Conventions
 
