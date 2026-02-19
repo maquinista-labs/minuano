@@ -84,6 +84,20 @@ else
     fail "done missing exit code check"
 fi
 
+# Test: claim script supports --project flag
+if grep -q '\-\-project' "$SCRIPTS_DIR/minuano-claim"; then
+    pass "claim supports --project flag"
+else
+    fail "claim missing --project support"
+fi
+
+# Test: claim script uses PROJECT_FILTER
+if grep -q 'PROJECT_FILTER' "$SCRIPTS_DIR/minuano-claim"; then
+    pass "claim uses PROJECT_FILTER variable"
+else
+    fail "claim missing PROJECT_FILTER"
+fi
+
 # Test: pick script requires task ID
 if grep -q 'TASK_ID.*Usage:' "$SCRIPTS_DIR/minuano-pick"; then
     pass "pick requires task ID"

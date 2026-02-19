@@ -1,10 +1,26 @@
 #!/usr/bin/env bash
 # Atomically claim one ready task. Prints JSON or exits 0 with no output.
+# Usage: minuano-claim [--project <name>]
 set -euo pipefail
 
 AGENT_ID="${AGENT_ID:?AGENT_ID not set}"
 CAPABILITY="${CAPABILITY:-}"
 DB="${DATABASE_URL:?DATABASE_URL not set}"
+
+# Parse optional --project flag.
+PROJECT=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --project) PROJECT="$2"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+
+# Build project filter clause.
+PROJECT_FILTER=""
+if [ -n "$PROJECT" ]; then
+  PROJECT_FILTER="AND project_id = '$PROJECT'"
+fi
 
 psql "$DB" -t -A -c "
   WITH claimed AS (
@@ -15,6 +31,7 @@ psql "$DB" -t -A -c "
       SELECT id FROM tasks
       WHERE status='ready'
         AND (capability IS NULL OR capability='$CAPABILITY')
+        $PROJECT_FILTER
         AND attempt < max_attempts
       ORDER BY priority DESC, created_at ASC
       LIMIT 1 FOR UPDATE SKIP LOCKED
