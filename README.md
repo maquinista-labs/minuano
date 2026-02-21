@@ -6,7 +6,11 @@ A Go CLI that coordinates [Claude Code](https://docs.anthropic.com/en/docs/claud
 
 Agents atomically claim tasks from a shared queue, inherit context from dependency tasks, run tests locally as the completion gate, and write persistent observations back to the database across context resets. No orchestrator, no background token burn — the database drives the loop.
 
-Heavily inspired by [Beads](https://github.com/steveyegge/beads) (Gas Town) and its pull-based coordination model. Unlike Gas Town, where agent sessions stay alive and continuously pull tasks (burning tokens on idle loops), Minuano terminates the Claude Code process after each task and spawns a fresh one for the next. This trades session continuity for precise token control — agents only consume tokens when actively working. See [AI Orchestration: Reinventing Linda](https://otavio.cat/posts/ai-orchestration-reinventing-linda/) for the background on how tuple-space coordination patterns informed this design.
+Heavily inspired by Steve Yegge's [Beads](https://github.com/steveyegge/beads) / [Gas Town](https://sunsama.com/blog/gas-town) and its pull-based coordination model — agents claim work from a shared queue instead of being directed by an orchestrator.
+
+The key difference: Gas Town keeps agent sessions alive, continuously pulling tasks and burning tokens on idle loops. Minuano terminates the Claude Code process after each task and spawns a fresh one for the next. This trades session continuity for precise token control — agents only consume tokens when actively working.
+
+See [AI Orchestration: Reinventing Linda](https://otavio.cat/posts/ai-orchestration-reinventing-linda/) for how tuple-space coordination patterns informed this design.
 
 ## How it works
 
