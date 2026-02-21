@@ -6,6 +6,8 @@ A Go CLI that coordinates [Claude Code](https://docs.anthropic.com/en/docs/claud
 
 Agents atomically claim tasks from a shared queue, inherit context from dependency tasks, run tests locally as the completion gate, and write persistent observations back to the database across context resets. No orchestrator, no background token burn — the database drives the loop.
 
+Heavily inspired by [Beads](https://github.com/steveyegge/beads) (Gas Town) and its pull-based coordination model. The key insight: agents pull work when ready instead of being pushed tasks by an orchestrator, which eliminates the idle-polling token waste of supervisor loops. See [AI Orchestration: Reinventing Linda](https://otavio.cat/posts/ai-orchestration-reinventing-linda/) for the background on how tuple-space coordination patterns informed this design.
+
 ## How it works
 
 1. You describe work as tasks with dependencies (a DAG).
